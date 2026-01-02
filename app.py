@@ -18,7 +18,7 @@ def load_embeddings():
 embeddings = load_embeddings()
 
 # 2. File Upload
-uploaded_file = st.file_file_uploader("Upload a PDF to analyze", type="pdf")
+uploaded_file = st.file_uploader("Upload a PDF to analyze", type="pdf")
 
 if uploaded_file:
     # Save temp file
