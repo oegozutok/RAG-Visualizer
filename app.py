@@ -6,10 +6,12 @@ from langchain_community.vectorstores import FAISS
 import pandas as pd
 import tempfile
 import os
+
 # Page Config
 st.set_page_config(page_title="RAG Similarity Visualizer", layout="wide")
 st.title("🔍 RAG Similarity Visualizer")
 st.markdown("### Peek inside the 'Black Box' of Vector Search")
+
 # Initialize session state for persistent storage across reruns
 if "vectorstore" not in st.session_state:
     st.session_state.vectorstore = None
@@ -19,6 +21,7 @@ if "file_processed" not in st.session_state:
     st.session_state.file_processed = False
 if "current_file_name" not in st.session_state:
     st.session_state.current_file_name = None
+    
 # 1. Setup Embeddings (Using a free, local model)
 @st.cache_resource
 def load_embeddings():
@@ -63,6 +66,7 @@ def process_pdf(uploaded_file):
     except Exception as e:
         st.error(f"Error processing PDF: {e}")
         return None, []
+        
 def display_results(results_with_scores):
     """Display search results with visual formatting."""
     st.subheader("🎯 Top 5 Retrieved Chunks")
@@ -81,6 +85,7 @@ def display_results(results_with_scores):
             with col2:
                 if hasattr(doc, 'metadata') and doc.metadata:
                     st.caption(f"📄 Page: {doc.metadata.get('page', 'N/A')}")
+                    
 def display_statistics(vectorstore, query, total_docs):
     """Display statistical analysis of the retrieval."""
     st.divider()
@@ -107,14 +112,17 @@ def display_statistics(vectorstore, query, total_docs):
         )
     except Exception as e:
         st.warning(f"Could not generate statistics: {e}")
+        
 # Main Application Flow
 embeddings = load_embeddings()
 if embeddings is None:
     st.error("❌ Could not load the embeddings model. Please check your installation.")
     st.stop()
+    
 # 2. File Upload Section
 st.sidebar.header("📁 Document Upload")
 uploaded_file = st.sidebar.file_uploader("Upload a PDF to analyze", type="pdf")
+
 # Process file only when a new file is uploaded
 if uploaded_file is not None:
     # Check if this is a new file
@@ -134,6 +142,7 @@ if uploaded_file is not None:
         # Same file, already processed
         if st.session_state.file_processed:
             st.info(f"📄 Using previously processed file: '{uploaded_file.name}' ({len(st.session_state.docs)} chunks)")
+            
 # 3. Query Section - Only show if we have a processed file
 if st.session_state.file_processed and st.session_state.vectorstore is not None:
     st.divider()
